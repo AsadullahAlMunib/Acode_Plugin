@@ -1,0 +1,11 @@
+{
+  "id": "acode-localhost-manager",
+  "name": "Localhost + phpMyAdmin (Android)",
+  "version": "1.0.0",
+  "author": "ChatGPT",
+  "description": "Manage a local PHP server and open phpMyAdmin in Acode. Provides minimal Termux setup scripts and lets you set an htdocs folder.",
+  "main": "main.js",
+  "repository": "https://example.invalid",
+  "icon": "🖥️",
+  "minAcodeVersion": "1.10.0"
+}
