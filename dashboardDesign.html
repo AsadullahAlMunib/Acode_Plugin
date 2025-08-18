@@ -1,0 +1,659 @@
+<!-- <?php echo htmlspecialchars($_SESSION['userName']); ?> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Dashboard, Profile, User">
+    <meta name="author" content="Asadullah">
+    <title>Dashboard || Dashboard Design</title> 
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: Sans-Serif;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        :root {
+            --primary: #fff;
+            --bg1: #e1b7f2;
+            --bg2: #b7dff2;
+            --text : #000;
+            --shadow: #333;
+            --btn1: #3f5efb;
+            --btn2: #fc466b;
+        }
+        .nightMood {
+            --primary: #111;
+            --bg1: #2d0e40;
+            --bg2: #0a2a3a; 
+            --text : #fff;
+            --shadow: #ddd;
+            --btn1: #d37930;
+            --btn2: #e540be;
+        }
+        body {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--bg1), var(--bg2));
+            justify-items: center;
+            align-content: center;
+            transition: background 0.5s ease, color 0.3s ease;
+        }
+        .nav {
+            display: flex;
+            width: min(600px, 95%);
+            height: 50px;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 8px;
+            margin: 0 0 8px 0;
+            padding: 10px 5px;
+            background: var(--primary);
+            box-shadow: 0 0 10px -2px var(--shadow);
+        }
+        .nav .nav-item input {
+            display: none;
+        }
+        .nav .nav-item label {
+            height: 30px;
+            padding: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 5px;
+            border-radius: 6px;
+            align-content: center;
+            color: var(--text);
+            box-shadow: 2px 2px 5px -3px var(--shadow), inset 1px 1px 5px -3px var(--shadow);
+            transition: all 0.2s ease;
+        }
+        .nav .nav-item label:hover {
+            box-shadow: 2px 2px 5px -3px var(--shadow);
+            position: relative;
+            top: -2px;
+            background: var(--bg2);
+        }
+        .nav .nav-item:nth-child(3) {
+            position: absolute;
+        }
+        .nav .nav-item .themeToggle {
+            position: relative;
+            bottom: 42.5px;
+            left: -6px;
+            background: var(--primary);
+            padding: 8px;
+            border-radius: 50% 50% 0 0;
+            box-shadow: -3px 0 3px -3px var(--shadow), 3px 0 3px -3px var(--shadow), 0 -3px 3px -3px var(--shadow); 
+        }
+        .nav .nav-item .themeToggle button {
+            text-shadow: 0 0 5px #fff;
+            background: #999999;
+            border-radius: 50%;
+            padding: 1px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease-in;
+        }
+        .nav .nav-item .themeToggle button:hover {
+            transform: scale(1.1);
+        }
+        .nav .nav-item .themeToggle button:active {
+            transform: translateY(1px) scale(1.05) rotate(360deg);
+        }
+        .nav .nav-item input:checked ~ label {
+            box-shadow: 2px 2px 5px -2px var(--shadow), inset 1px 1px 5px -1px var(--shadow); 
+            background: linear-gradient(45deg, var(--btn1), var(--btn2));
+            color: var(--primary);
+        }
+        .nav .nav-item:last-child a {
+           text-decoration: none;
+        }
+        .nav .nav-item:last-child a label {
+            border: 1px solid #fc466b;
+            padding: 5px 6px;
+            color: var(--text);
+            background: linear-gradient(to right, #fc466b 50%, transparent 50%);
+            background-size: 200% 100%;
+            background-position: right;
+            transition: background 0.5s ease, color 0.2s ease;
+        }
+        .nav .nav-item:last-child a label:hover {
+            position: relative;
+            top: 0;
+            left: 5px;
+            border: 1px solid #f96483;
+            background-position: left;
+            color: var(--primary);
+        }
+        .nav .nav-item:last-child a label:active {
+            background: #e7788d;
+            color: var(--primary);
+        }
+        
+        .container {
+            width: min(600px, 95%);
+            border-radius: 15px;
+            overflow: hidden;
+            text-align: center;
+            background: var(--primary);
+            box-shadow: 0 0 10px -5px var(--shadow);
+            transition: all 0.5s ease-in-out;
+        }
+        #home.open, 
+        #profile.open, 
+        #settings.open {
+            max-height: 560px;
+            padding: 15px;
+        }
+        #home.close, 
+        #profile.close, 
+        #settings.close {
+            max-height: 0;
+        }
+        h2 {
+            background: linear-gradient(145deg, var(--btn1), var(--btn2));
+            background-clip: text;
+            color: transparent;
+            font-size: 33px;
+            margin: 0 0 10px 0;
+        }
+        p {
+            color: var(--text);
+            font-weight: 500;
+            font-size: 18px;
+            margin: 0 0 10px 0;
+        }
+        
+        .info {
+            display: flex;
+            justify-content: space-evenly;
+            margin: 0 0 15px 0;
+        }
+        .card {
+            width: 200px;
+            height: 100px;
+            padding: 5px;
+            margin: 5px 0;
+            border-radius: 10px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            text-align: center;
+            box-shadow: 0 0 10px -3px var(--shadow);
+        }
+        .card:nth-child(1) {
+            background-image: url('https://images.unsplash.com/photo-1639171430793-544183b40ab2?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzF8fHN0YXRpY3MlMjBncmFwaGljYWwlMjBjb2xvciUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D');
+        }
+        .card:nth-child(2) {
+            background-image: url('https://images.unsplash.com/photo-1655998233171-ee5b130acba5?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fHN0YXRpY3MlMjBncmFwaGljYWwlMjBjb2xvciUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D');
+        }
+        .card p {
+            margin: 8px 0;
+            font-size: 22px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .card h1 {
+            color: var(--primary);
+            text-shadow: 0 0 8px var(--shadow);
+        }
+        
+        #profile .regInfo {
+            width: 100%;
+            height: 100px;
+            padding: 5px;
+            margin: 0 0 15px 0;
+            border-radius: 10px;
+            background-image: url('https://images.unsplash.com/photo-1663094615740-322d2a238949?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDQzfHxncmFwaGljYWwlMjBjb2xvcmZ1bCUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            text-align: center;
+            box-shadow: 0 0 10px -3px var(--shadow);
+        }
+        #profile .regInfo h1 {
+            margin: 10px 0;
+            font-size: 24px;
+            color: #fff;
+        }
+        #profile .regInfo p {
+            font-size: 18px;
+            color: #fff;
+            font-weight: 600;
+        }
+        .inputForm {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+        .input_group {
+            width: 45%;
+            padding: 5px;
+            margin: 5px;
+            position: relative;
+        }
+        .input_group input {
+            padding: 8px 8px 5px;
+            width: 100%;
+            color: var(--text);
+            font-size: 18px;
+            border-radius: 5px;
+            background: transparent;
+            border: 1px solid var(--text);
+            transition: background 0.2s;
+        }
+        .input_group input:focus {
+            outline: none;
+        }
+        .input_group input[readonly] {
+            background: #cdcbcdcd;
+            backdrop-filter: blur(10px);
+        }
+        .input_group label {
+            position: absolute;
+            left: 12px;
+            top: -5px;
+            color: var(--text);
+            font-weight: 500;
+            background: linear-gradient(0deg, transparent 20%, var(--primary) 0%);
+            transition: 0.2s;
+        }
+        .input_group input:focus ~ label,
+        .input_group input:invalid ~ label {
+            top: -5px;
+            background: linear-gradient(0deg, transparent 20%, var(--primary) 0%);
+        }
+        .input_group input[value=''][readonly] ~ label,
+        .input_group input[value=''][readonly]:focus ~ label, 
+        .input_group input:invalid:not([readonly]):not(:focus) ~ label {
+            top: 12px;
+            background: transparent;
+        }
+        .btn_group {
+            margin: 5px 0 10px 0;
+            display: flex;
+        }
+        .btn_group .btn {
+            padding: 8px 10px;
+            margin: 0 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+            border: none;
+            box-shadow: 2px 2px 5px -1px var(--shadow), inset 1px 1px 5px -2px var(--shadow); 
+            transition: all 0.2s;
+        }
+        .btn_group .btn:hover {
+            transform: translateY(-2px) scale(1.02);
+        }
+        .btn_group .btn:active {
+            transform: scale(0.99);
+        }
+        .btn_group .btn:nth-child(1) {
+            background: #fb2c3c;
+            display: none;
+        }
+        .btn_group .btn:nth-child(2) {
+            background: #ff0cff;
+            display: block;
+        }
+        .btn_group .btn:nth-child(3) {
+            background: #1fd000;
+            display: none;
+        }
+        
+        #settings details summary {
+            border: 2px solid #b800ff;
+            padding: 10px 5px;
+            border-radius: 8px;
+            color: var(--text);
+            font-weight: bold;
+            font-size: 18px;
+            list-style: none;
+            box-shadow: 0 0 10px -3px var(--shadow);
+            background: linear-gradient(to right, #ff20a0 50%, transparent 50%);
+            background-size: 200% 100%;
+            background-position: right;
+            transition: all 0.5s ease-out;
+        }
+        #settings details[open] summary, 
+        #settings details summary:hover {
+            border: 2px solid #ff20a0;
+            background-position: left;
+            color: #fff;
+        }
+        #settings details[open] summary {
+            margin: 0 0 15px 0;
+        }
+        #settings details .inputForm {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s ease-in-out;
+        }
+        #settings details[open] .inputForm {
+            max-height: 300px;
+            opacity: 1;
+        }
+        #settings details[open] .inputForm .input_group input {
+            padding: 8px 30px 5px 8px;
+        }
+        #settings details[open] .inputForm .input_group span {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+        }
+        #settings details[open] .inputForm .input_group small {
+            position: absolute;
+            font-size: 10px;
+            bottom: -6px;
+            left: 12px;
+            color: #f00;
+            visibility: hidden;
+        }
+        #settings details .inputForm button {
+            padding: 8px 8px 5px;
+            width: 100%;
+            background: linear-gradient(to right, var(--btn2), var(--btn1));
+            background-size: 150% 100%;
+            background-position: right;
+            border: 1px solid var(--text);
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            transition: background-position 0.3s;
+        }
+        #settings details .inputForm button:hover {
+            background-position: left;
+        }
+        #settings .delateAccount {
+            border: 2px solid #ff20a0;
+            padding: 10px 5px;
+            border-radius: 8px;
+            color: var(--text);
+            font-weight: bold;
+            font-size: 18px;
+            width: 100%;
+            margin: 15px 0 0 0;
+            box-shadow: 0 0 10px -3px var(--shadow);
+            background: linear-gradient(to right, #ff2b2b 50%, transparent 50%);
+            background-size: 200% 100%;
+            background-position: right;
+            transition: all 0.5s ease-out;
+        }
+        #settings .delateAccount:hover {
+            border: 2px solid #ff2b2b;
+            background-position: left;
+            color: #fff;
+        }
+        #settings details[open] ~ .delateAccount {
+            margin: 20px 0 0 0;
+        }
+        
+        @media only screen and (max-width: 550px) {
+            h2 {
+                font-size: 30px;
+            }
+            .info {
+                flex-direction: column;
+            }
+            .card {
+                width: 100%;
+            }
+        }
+        @media only screen and (max-width: 480px) {
+            .input_group {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation section  -->
+    <div class="nav">
+        <div class="nav-item">
+            <input type="radio" name="nav-opt" id="nav_home" checked>
+            <label for="nav_home">Home</label>
+        </div>
+        <div class="nav-item">
+            <input type="radio" name="nav-opt" id="nav_profile">
+            <label for="nav_profile">Profile</label>
+        </div>
+        <div class="nav-item">
+            <div class="themeToggle">
+                <button type="button" id="themeToggleButton">🌞</button>
+            </div>
+        </div>
+        <div class="nav-item">
+            <input type="radio" name="nav-opt" id="nav_settings">
+            <label for="nav_settings">Setting</label>
+        </div>
+        <div class="nav-item">
+            <a href="">
+                <label>Logout</label>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Home section  -->
+    <div class="container" id="home">
+        <h2>Welcome, Dashboard Design!</h2>
+        <p>Your Email: dashboard@example.com</p>
+        <div class="info">
+            <div class="card">
+                <p>Total Registration</p>
+                <h1>124</h1>
+            </div>
+            <div class="card">
+                <p>Your ID Number</p>
+                <h1>29</h1>
+            </div>
+        </div>
+        <div>
+            <p>Available User: 90</p>
+            <p>Your IP Address: 127.0.0.1</p>
+        </div>
+    </div> 
+    
+    <!-- Profile section -->
+    <div class="container" id="profile">
+        <div class="regInfo">
+            <h1>Your Joining Date & Time</h1>
+            <p>05 February, 2025 || 05:36 PM</p>
+        </div>
+        <form action="" method="post" class="inputForm">
+            <div class="input_group">
+                <input type="text" name="name" id="userName" value="Dashboard Design" readonly required>
+                <label for="userName">Full Name</label>
+            </div>
+            <div class="input_group">
+                <input type="email" name="email" id="userEmail" value="dashboard@example.com" readonly required> 
+                <label for="userEmail">Email</label>
+            </div>
+            <div class="input_group">
+                <input type="text" name="username" id="userUsername" value="dashboard" readonly required> 
+                <label for="userUsername">Username</label>
+            </div>
+            <div class="input_group">
+                <input type="number" name="phone_number" id="userPhoneNumber" maxlength="11" value="" readonly required> 
+                <label for="userPhoneNumber">Phone Number</label>
+            </div>
+            <div class="btn_group">
+                <button type="button" class="btn" id="btnCancel">Cancel</button>
+                <button type="button" class="btn" id="btnEdit" onclick="editProfile()">Edit Profile</button>
+                <button type="submit" class="btn" id="btnUpdate">Update</button>
+            </div>
+        </form>
+        <span>Last Update: 05 February, 2025</span>
+    </div>
+    
+    <!-- Settings section  -->
+    <div class="container" id="settings">
+        <details>
+            <summary>Change Password</summary>
+            <form action="" method="post" class="inputForm">
+                <div class="input_group">
+                    <input type="password" name="" id="currentPassword" required> 
+                    <span onclick="togglePassword(this)">🙈</span>
+                    <label for="currentPassword">Current Password</label>
+                    <small class="currentPasswordError">Current Password wrong!</small>
+                </div>
+                <div class="input_group">
+                    <input type="password" name="" id="newPassword" required>
+                    <span onclick="togglePassword(this)">🙈</span>
+                    <label for="newPassword">New Password</label>
+                    <small class="newPasswordError">Minimum 6 character!</small>
+                </div>
+                <div class="input_group">
+                    <input type="password" name="" id="confirmPassword" required>
+                    <span onclick="togglePassword(this)">🙈</span>
+                    <label for="confirmPassword">Confirm Password</label>
+                    <small class="confirmPasswordError">Confirm Password isn’t same!</small>
+                </div>
+                <div class="input_group">
+                    <button type="submit" id="changePasswordButton">Change</button>
+                </div>
+            </form>
+        </details>
+        <button class="delateAccount">Delate Account</button>
+    </div>
+    
+    <!-- JavaScript  -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navRadio = document.querySelectorAll('input[name="nav-opt"]'); 
+            
+            const containers = {
+                home : document.getElementById('home'),
+                profile : document.getElementById('profile'),
+                settings : document.getElementById('settings')
+            };
+            
+            function tabChangeSystem() {
+                Object.values(containers).forEach(container => {
+                    container.classList.remove('open');
+                    container.classList.add('close');
+                });
+                
+                const selectedTab = document.querySelector('input[name="nav-opt"]:checked');
+                if(selectedTab) {
+                    const targetId = selectedTab.id.replace('nav_', '');
+                    setTimeout(() => {
+                        containers[targetId].classList.remove("close");
+                        containers[targetId].classList.add("open");
+                    }, 1000);
+                }
+            }
+            
+            navRadio.forEach(radio => {
+                radio.addEventListener('change', tabChangeSystem);
+            });
+            
+            tabChangeSystem();
+        });
+        
+        function editProfile() {
+            const form = document.querySelector('.inputForm');
+            const inputs = form.querySelectorAll('input');
+            const btnEdit = document.getElementById('btnEdit');
+            const btnCancel = document.getElementById('btnCancel');
+            const btnUpdate = document.getElementById('btnUpdate');
+            
+            inputs.forEach(input => {
+                input.removeAttribute('readonly');
+                
+                btnEdit.style.display = 'none';
+                btnCancel.style.display = 'block';
+                btnUpdate.style.display = 'block';
+                
+                btnCancel.addEventListener('click', function() {
+                    inputs.forEach(input => {
+                        form.reset();
+                        input.setAttribute('readonly', true);
+                        
+                        btnEdit.style.display = 'block';
+                        btnCancel.style.display = 'none';
+                        btnUpdate.style.display = 'none';
+                    });
+                });
+            });
+        } 
+        
+        function togglePassword(iconSpan) {
+            const inputPassword = iconSpan.previousElementSibling; 
+            
+            if(inputPassword.type === 'password') {
+                iconSpan.textContent = '👁';
+                inputPassword.type = 'text';
+            }
+            else {
+                iconSpan.textContent = '🙈';
+                inputPassword.type = 'password';
+            }
+        } 
+        
+        const newPassword = document.getElementById("newPassword"); 
+        const confirmPassword = document.getElementById("confirmPassword");
+        const newPasswordError = document.querySelector(".newPasswordError");
+        const confirmPasswordError = document.querySelector(".confirmPasswordError");
+        const changePasswordButton = document.getElementById("changePasswordButton"); 
+        let newPasswordValid = false;
+        let confirmPasswordValid = false;
+        document.querySelector("#confirmPassword").addEventListener('input', function() {
+            if(confirmPassword.value !== newPassword.value) {
+                confirmPassword.style.borderColor = "#f00";
+                confirmPasswordValid = false;
+                changePasswordButton.setAttribute('disabled', true);
+                confirmPasswordError.style.visibility = "visible";
+            }
+            else {
+                confirmPassword.style.borderColor = "var(--text)";
+                confirmPasswordValid = true;
+                if(newPasswordValid) {
+                    changePasswordButton.removeAttribute('disabled');
+                } else {
+                    newPassword.style.borderColor = "#f00";
+                    newPasswordError.style.visibility = "visible";
+                }
+                confirmPasswordError.style.visibility = "hidden";
+            }
+        }); 
+        document.querySelector("#newPassword").addEventListener('input', function() {
+            if(newPassword.value.length < 6) {
+                newPassword.style.borderColor = "#f00";
+                newPasswordValid = false;
+                changePasswordButton.setAttribute('disabled', true); 
+                newPasswordError.style.visibility = "visible";
+            }
+            else {
+                newPassword.style.borderColor = "var(--text)";
+                newPasswordValid = true;
+                if(confirmPasswordValid) {
+                    changePasswordButton.removeAttribute('disabled');
+                } else {
+                    confirmPassword.style.borderColor = "#f00";
+                    confirmPasswordError.style.visibility = "visible";
+                }
+                newPasswordError.style.visibility = "hidden";
+            }
+        }); 
+        
+        const themeToggleButton = document.getElementById("themeToggleButton");
+        themeToggleButton.addEventListener('click', function() {
+            const theme = document.body.classList;
+            if(!theme.contains('nightMood')) {
+                theme.add("nightMood");
+                themeToggleButton.textContent = '🌙';
+            }
+            else {
+                theme.remove("nightMood");
+                themeToggleButton.textContent = '🌞';
+            }
+        });
+    </script>
+</body>
+</html>
