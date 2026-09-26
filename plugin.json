@@ -1,11 +1,31 @@
 {
+  "$schema": "https://acode.app/schema/plugin/v0.1.0.json",
   "id": "acode-localhost-manager",
-  "name": "Localhost + phpMyAdmin (Android)",
-  "version": "1.0.0",
-  "author": "Asadullah",
-  "description": "Manage a local PHP server and open phpMyAdmin in Acode. Provides minimal Termux setup scripts and lets you set an htdocs folder.",
+  "name": "Localhost + phpMyAdmin",
   "main": "main.js",
-  "repository": "https://github.com/AsadullahAlMunib/Acode_Plugin",
-  "icon": "🖥️",
-  "minAcodeVersion": "1.10.0"
+  "version": "1.0.0",
+  "readme": "README.md",
+  "icon": "icon.png",
+  "files": [
+    "scripts/setup.sh",
+    "scripts/start.sh",
+    "scripts/stop.sh"
+  ],
+  "minVersionCode": 290,
+  "license": "MIT",
+  "description": "Manage local PHP server and open phpMyAdmin directly in Acode.",
+  "keywords": [
+    "localhost",
+    "php",
+    "phpmyadmin",
+    "mariadb",
+    "mysql",
+    "server",
+    "termux"
+  ],
+  "author": {
+    "name": "Asadullah",
+    "email": "",
+    "github": "https://github.com/AsadullahAlMunib"
+  }
 }
